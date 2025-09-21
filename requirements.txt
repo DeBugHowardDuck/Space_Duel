@@ -1,0 +1,19 @@
+# --- Web-приложение ---
+Flask>=3.0,<4
+Jinja2>=3.1,<4
+gunicorn>=22.0,<23
+python-dotenv>=1.0,<2
+
+# --- Сериализация/валидация ---
+marshmallow>=3.21,<4
+marshmallow-dataclass>=8,<9
+
+# --- Качество кода ---
+ruff>=0.6,<0.7
+mypy>=1.11,<2
+pre-commit>=3.7,<4
+
+# --- Тестирование ---
+pytest>=8,<9
+pytest-cov>=5,<6
+hypothesis>=6,<7
