@@ -1,0 +1,4 @@
+# file: C:\Users\Ku\PycharmProjects\Space_Duel\app\web.py
+# hypothesis_version: 6.140.0
+
+[0.9, 1.0, 1.1, 1.2, 400, '/', '/choose-enemy', '/choose-hero', '/fight', '/fight/end-fight', '/fight/hit', '/fight/pass-turn', '/healthz', '/start-fight', 'Alpha', 'CSRF failed', 'Destroyer', 'Enemy', 'GET', 'HX-Request', 'Interceptor', 'Omega', 'P', 'POST', 'Player', 'Unknown shield', 'Unknown unit_class', 'Unknown weapon', 'X-CSRF-TOKEN', 'X-CSRF-Token', '_csrf_token', 'choose_enemy.html', 'choose_enemy_form', 'choose_enemy_submit', 'choose_hero.html', 'choose_hero_form', 'csrf_token', 'destroyer', 'emp', 'enemy_selection', 'equipment.json', 'fight.html', 'hero_selection', 'interceptor', 'name', 'oK', 'overcharge', 'player', 'railgun_mk1', 'shield', 'shield_heavy', 'true', 'unit_class', 'weapon', 'web', 'web.choose_hero_form', 'web.fight', 'web.start_fight']

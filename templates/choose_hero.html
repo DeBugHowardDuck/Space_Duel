@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Выбор героя — Space Duel{% endblock %}
+
+{% block content %}
+  <h2>Выбор героя</h2>
+
+  <form method="post" action="{{ url_for('web.choose_hero_submit') }}">
+
+    <div style="margin: 12px 0;">
+      <label for="name">Имя корабля</label><br>
+      <input id="name" name="name" type="text" value="Player" required>
+    </div>
+
+    <fieldset style="margin: 12px 0;">
+      <legend>Класс корабля</legend>
+      {% for slug, cls in classes.items() %}
+        <label style="display:block;">
+          <input type="radio" name="unit_class" value="{{ slug }}" {% if loop.first %}checked{% endif %}>
+          {{ cls.name }} (hull {{ cls.hull_max }}, energy {{ cls.energy_max }})
+        </label>
+      {% endfor %}
+    </fieldset>
+
+    <fieldset style="margin: 12px 0;">
+      <legend>Оружие</legend>
+      {% for slug, w in weapons.items() %}
+        <label style="display:block;">
+          <input type="radio" name="weapon" value="{{ slug }}" {% if loop.first %}checked{% endif %}>
+          {{ w.name }} — dmg {{ w.dmg_min }}..{{ w.dmg_max }}, cost {{ w.energy_cost }}, acc {{ '%.0f'|format(w.accuracy * 100) }}%
+        </label>
+      {% endfor %}
+    </fieldset>
+
+    <fieldset style="margin: 12px 0;">
+      <legend>Щит</legend>
+      {% for slug, s in shields.items() %}
+        <label style="display:block;">
+          <input type="radio" name="shield" value="{{ slug }}" {% if loop.first %}checked{% endif %}>
+          {{ s.name }} — cap {{ s.capacity }}, eff {{ '%.0f'|format(s.efficiency * 100) }}%, regen {{ s.regen }}
+        </label>
+      {% endfor %}
+    </fieldset>
+
+    <button type="submit">Сохранить выбор</button>
+  </form>
+{% endblock %}

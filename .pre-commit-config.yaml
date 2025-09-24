@@ -24,8 +24,17 @@ repos:
         args: ["--fix"]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.18.2
+    rev: v1.11.1
     hooks:
       - id: mypy
         args: ["--config-file=pyproject.toml"]
-        files: ^(app|tests)/.*\.py$
+        additional_dependencies:
+          - "mypy==1.11.1"
+          - "pytest>=8,<9"
+          - "marshmallow>=3.21,<4"
+          - "marshmallow-dataclass>=8,<9"
+          - "types-PyYAML"
+          - "types-requests"
+          - "hypothesis>=6.100"
+          - "pytest>=8"
+          - "typing-extensions>=4.9"
