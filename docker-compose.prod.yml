@@ -1,6 +1,6 @@
 services:
   web:
-    image: ghcr.io/debughowardduck/space-duel:latest
+    image: ghcr.io/debughowardduck/space-duel-app:latest
     env_file: .env
     environment:
       SECRET_KEY: ${SECRET_KEY:-dev-secret}
