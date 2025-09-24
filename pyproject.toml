@@ -35,7 +35,7 @@ files = ["app", "wsgi.py"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"
-addopts = "-q --color=yes --strict-markers --strict-config --cov=app --cov-report=term-missing:skip-covered --cov-report=html"
+addopts = "-q --color=yes --strict-markers --strict-config --cov=app --cov-report=term-missing:skip-covered --cov-report=html --cov-fail-under=70"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 xfail_strict = true
