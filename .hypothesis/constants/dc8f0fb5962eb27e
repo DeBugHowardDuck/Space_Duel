@@ -1,4 +1,0 @@
-# file: C:\Users\Ku\PycharmProjects\Space_Duel\app\config.py
-# hypothesis_version: 6.140.0
-
-['0', '1', 'AI_SKILL_CHANCE', 'ARENA_RNG_SEED', 'FLASK_DEBUG', 'SECRET_KEY', 'dev-secret']

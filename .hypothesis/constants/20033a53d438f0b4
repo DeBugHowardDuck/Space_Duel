@@ -1,4 +1,0 @@
-# file: C:\Users\Ku\PycharmProjects\Space_Duel\app\health.py
-# hypothesis_version: 6.140.0
-
-[200, '/healthz', 'healthz', 'oK', 'status']

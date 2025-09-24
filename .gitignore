@@ -26,3 +26,4 @@ build/
 
 # ОС-специфика
 .DS_Store
+.hypothesis/
