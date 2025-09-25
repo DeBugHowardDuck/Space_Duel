@@ -1,16 +1,17 @@
-from __future__ import annotations  # включаем аннотации будущего (совместимо с 3.12+)
+from __future__ import annotations
 
-from dataclasses import dataclass  # для фиктивного RNG как dataclass
+from dataclasses import dataclass
+from typing import Any
 
-from hypothesis import (  # декораторы Hypothesis
+from hypothesis import (
     given,
     settings,
-    strategies as st,  # пространство стратегий
+    strategies as st,
 )
 
-from app.classes import UnitClass  # доменный класс корабля
-from app.equipment import Shield, Weapon  # предметы: щит и оружие
-from app.unit import AttackOutcome, create_ai, create_player  # фабрики юнитов, тип результата
+from app.classes import UnitClass
+from app.equipment import Shield, Weapon
+from app.unit import AttackOutcome, create_ai, create_player
 
 
 @dataclass(slots=True)
@@ -30,7 +31,7 @@ class RngFixed:
 
 # Композитная стратегия: строим согласованный набор (атакующий, цель, RNG).
 @st.composite
-def units_and_rng(draw: st.DrawFn) -> tuple:
+def units_and_rng(draw: st.DrawFn) -> tuple[Any, ...]:
     # dmg_min ≤ dmg_max
     dmg_min = draw(st.integers(min_value=1, max_value=20))
     dmg_max = draw(st.integers(min_value=dmg_min, max_value=dmg_min + 20))
@@ -100,7 +101,7 @@ def units_and_rng(draw: st.DrawFn) -> tuple:
 
 @given(units_and_rng())
 @settings(max_examples=80)  # чуть сокращаем, чтобы тест шёл быстро локально
-def test_basic_attack_invariants_hold(data: tuple) -> None:
+def test_basic_attack_invariants_hold(data: tuple[Any, ...]) -> None:
     atk, tgt, rng = data  # распаковали тройку из стратегии
 
     # снимем снимок до удара — проверим, что basic_attack не мутирует модели

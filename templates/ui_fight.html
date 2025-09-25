@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Space Duel — Бой (UI/HTMX){% endblock %}
+{% block content %}
+<div class="panel-page">
+  <h1>Space Duel: Бой (демо панели)</h1>
+
+  <div id="battle-panel"
+       hx-get="{{ url_for('web.ui_panel') }}"
+       hx-trigger="load"
+       hx-target="#battle-panel"
+       hx-swap="outerHTML">
+    <div class="skeleton">Загрузка панели…</div>
+  </div>
+</div>
+{% endblock %}

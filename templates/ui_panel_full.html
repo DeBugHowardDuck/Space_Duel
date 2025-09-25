@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Space Duel — Панель боя{% endblock %}
+{% block content %}
+  <div class="panel-page">
+    <h1>Space Duel: Панель (прямой просмотр)</h1>
+    {# ВАЖНО: здесь подключаем тот же partial, что и для HTMX #}
+    {% include "partials/_battle_panel.html" %}
+  </div>
+{% endblock %}

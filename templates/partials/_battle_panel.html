@@ -1,0 +1,51 @@
+
+<div id="battle-panel" class="battle-card" data-panel="1">
+  <div class="row">
+    <div class="col">
+      <h2>Игрок — {{ view.player.name }}</h2>
+      <div class="bar">HP: {{ view.player.hp }}/{{ view.player.hp_max }}</div>
+      <div class="bar">EN: {{ view.player.en }}/{{ view.player.en_max }}</div>
+      <div class="bar">Щит: {{ view.player.shield }}/{{ view.player.shield_max }}</div>
+      <div class="bar">Оружие: {{ view.player.weapon }}</div>
+    </div>
+    <div class="col">
+      <h2>ИИ — {{ view.enemy.name }}</h2>
+      <div class="bar">HP: {{ view.enemy.hp }}/{{ view.enemy.hp_max }}</div>
+      <div class="bar">EN: {{ view.enemy.en }}/{{ view.enemy.en_max }}</div>
+      <div class="bar">Щит: {{ view.enemy.shield }}/{{ view.enemy.shield_max }}</div>
+      <div class="bar">Оружие: {{ view.enemy.weapon }}</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <form hx-post="{{ url_for('web.ui_action') }}" hx-target="#battle-panel" hx-swap="outerHTML">
+      <input type="hidden" name="action" value="attack">
+      <button type="submit">Атака</button>
+    </form>
+    <form hx-post="{{ url_for('web.ui_action') }}" hx-target="#battle-panel" hx-swap="outerHTML">
+      <input type="hidden" name="action" value="skill">
+      <button type="submit">Навык</button>
+    </form>
+    <form hx-post="{{ url_for('web.ui_action') }}" hx-target="#battle-panel" hx-swap="outerHTML">
+      <input type="hidden" name="action" value="recharge">
+      <button type="submit">Реген</button>
+    </form>
+    <form hx-post="{{ url_for('web.ui_action') }}" hx-target="#battle-panel" hx-swap="outerHTML">
+      <input type="hidden" name="action" value="pass">
+      <button type="submit">Пас</button>
+    </form>
+    <form hx-post="{{ url_for('web.ui_action') }}" hx-target="#battle-panel" hx-swap="outerHTML">
+      <input type="hidden" name="action" value="reset">
+      <button type="submit">Сброс</button>
+    </form>
+  </div>
+
+  <div class="log">
+    <div>Ход: {{ view.turn }}</div>
+    <ul>
+      {% for line in view.log %}
+        <li>{{ line }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

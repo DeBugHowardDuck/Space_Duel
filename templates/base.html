@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Space Duel{% endblock %}</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
       <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
 <meta name="csrf-token" content="{{ csrf_token }}">
       <script>
@@ -15,16 +16,13 @@
           });
       </script>
       <style>
-  /* Карточки и кнопки */
   .card { border:1px solid #d0d7de; border-radius:10px; padding:12px; background:#fff; }
   .btn { padding:8px 12px; border:1px solid #cbd5e1; border-radius:8px; background:#f8fafc; cursor:pointer; }
   .btn[disabled] { opacity:.6; cursor:not-allowed; }
   .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
 
-  /* Лог: фиксируем высоту и скролл */
   .log-list { max-height: 140px; overflow:auto; margin:0; padding-left:18px; }
 
-  /* Подсветка новой строки лога */
   .log-list li.new { animation: flash-bg 1.2s ease-out; }
   @keyframes flash-bg {
     0%   { background:#fff7ed; }
@@ -33,23 +31,23 @@
 </style>
 
 <script>
-  // Автопрокрутка и подсветка последнего события после любой HTMX-подмены fight-panel
+
   document.addEventListener('htmx:afterSwap', function (evt) {
     if (evt.detail && evt.detail.target && evt.detail.target.id === 'fight-panel') {
       var log = document.querySelector('#fight-panel .log-list');
       if (log) {
-        // снять прошлые подсветки
+
         log.querySelectorAll('li.new').forEach(function(el){ el.classList.remove('new'); });
-        // проскроллить вниз
+
         log.scrollTop = log.scrollHeight;
-        // подсветить последнюю строку, если есть
+
         var items = log.querySelectorAll('li');
         if (items.length) { items[items.length - 1].classList.add('new'); }
       }
     }
   });
 
-  // То же на первичный показ страницы (без HTMX)
+
   document.addEventListener('DOMContentLoaded', function () {
     var log = document.querySelector('#fight-panel .log-list');
     if (log) {
@@ -59,6 +57,7 @@
     }
   });
 </script>
+
   </head>
   <body style="font-family: system-ui, Arial, sans-serif; margin: 24px;">
     <header style="margin-bottom: 16px;">

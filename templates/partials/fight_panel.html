@@ -1,82 +1,103 @@
 {% set p = arena.player %}
 {% set e = arena.ai %}
-{% set is_player_turn = (arena.turn == 'player') %}
-{% set finished = arena.is_finished %}
+<div class="card" hx-headers='{"X-CSRF-Token":"{{ csrf_token }}"}'>
+  <div class="row">
+    <div>
+      <h2 class="title">Игрок: {{ p.name }}</h2>
+      <div class="muted">Корпус: {{ p.hull }}/{{ p.hull_max }}</div>
+      <div class="meter"><i style="width: {{ (100 * p.hull / p.hull_max)|round(0,'floor') }}%"></i></div>
+      <div class="muted" style="margin-top:8px;">Щит: {{ p.shield_hp }}/{{ p.shield.capacity }}</div>
+      <div class="meter m2"><i style="width: {{ (100 * (p.shield_hp if p.shield.capacity>0 else 0) / (p.shield.capacity if p.shield.capacity>0 else 1))|round(0,'floor') }}%"></i></div>
+      <div class="muted" style="margin-top:8px;">Энергия: {{ p.energy }}/{{ p.energy_max }}</div>
+      <div class="meter"><i style="width: {{ (100 * p.energy / p.energy_max)|round(0,'floor') }}%"></i></div>
+    </div>
 
-<div id="fight-panel">
-  <div style="display:flex; align-items:center; gap:8px;">
-    <div><strong>Ход:</strong> {{ arena.turn }}</div>
-    {% if finished %}
-      <span style="padding:2px 6px; border-radius:6px; background:#fee; border:1px solid #fbb; font-size:12px;">
-        Бой завершён
-      </span>
+    <div>
+      <h2 class="title">Враг: {{ e.name }}</h2>
+      <div class="muted">Корпус: {{ e.hull }}/{{ e.hull_max }}</div>
+      <div class="meter"><i style="width: {{ (100 * e.hull / e.hull_max)|round(0,'floor') }}%"></i></div>
+      <div class="muted" style="margin-top:8px;">Щит: {{ e.shield_hp }}/{{ e.shield.capacity }}</div>
+      <div class="meter m2"><i style="width: {{ (100 * (e.shield_hp if e.shield.capacity>0 else 0) / (e.shield.capacity if e.shield.capacity>0 else 1))|round(0,'floor') }}%"></i></div>
+      <div class="muted" style="margin-top:8px;">Энергия: {{ e.energy }}/{{ e.energy_max }}</div>
+      <div class="meter"><i style="width: {{ (100 * e.energy / e.energy_max)|round(0,'floor') }}%"></i></div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px;">
+    {% if arena.is_finished %}
+      {% if p.is_alive and not e.is_alive %}
+        <div class="win">Победа! 🎉</div>
+      {% elif e.is_alive and not p.is_alive %}
+        <div class="lose">Поражение… ☠️</div>
+      {% else %}
+        <div class="muted">Бой завершён.</div>
+      {% endif %}
+    {% else %}
+      <div class="muted">Ход: <span class="turn">{{ arena.turn }}</span></div>
     {% endif %}
-    <span class="htmx-indicator" style="display:none; font-size:12px; color:#666;">… обновление …</span>
   </div>
 
-  <div class="row" style="margin-top: 8px;">
-    <div class="card">
-      <h3 style="margin-top:0;">PLAYER {{ p.name }}</h3>
-      <div>Hull: {{ p.hull }} / {{ p.hull_max }}</div>
-      <div>Shield: {{ p.shield_hp }} / {{ p.shield.capacity }}</div>
-      <div>Energy: {{ p.energy }} / {{ p.energy_max }}</div>
-    </div>
-
-    <div class="card">
-      <h3 style="margin-top:0;">ENEMY {{ e.name }}</h3>
-      <div>Hull: {{ e.hull }} / {{ e.hull_max }}</div>
-      <div>Shield: {{ e.shield_hp }} / {{ e.shield.capacity }}</div>
-      <div>Energy: {{ e.energy }} / {{ e.energy_max }}</div>
-    </div>
-  </div>
-
-  <div style="margin-top: 12px;">
-    <h4 style="margin: 8px 0;">Телеметрия (последние 5):</h4>
-    <ul class="log-list">
-      {% for line in arena.log[-5:] %}
-        <li{% if loop.last %} class="new"{% endif %}>{{ line }}</li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
-    <button class="btn"
-      hx-post="{{ url_for('web.fight_hit') }}"
+  <div class="stack" style="margin-top:12px;">
+    <button
+      hx-post="/fight/hit"
       hx-target="#fight-panel"
       hx-swap="outerHTML"
-      {% if (not is_player_turn) or finished %}disabled title="Недоступно сейчас"{% endif %}>
+      hx-indicator="#loading"
+      {% if arena.is_finished or arena.turn != 'player' or not p.can_fire() %}disabled{% endif %}>
       Удар
     </button>
 
-    <button class="btn"
-      hx-post="{{ url_for('web.fight_use_skill', slug='overcharge') }}"
+    <button
+      hx-post="/fight/pass-turn"
       hx-target="#fight-panel"
       hx-swap="outerHTML"
-      {% if (not is_player_turn) or finished %}disabled title="Недоступно сейчас"{% endif %}>
+      hx-indicator="#loading"
+      {% if arena.is_finished or arena.turn != 'player' %}disabled{% endif %}>
+      Пасс
+    </button>
+
+    <button
+      hx-post="/fight/use-skill/overcharge"
+      hx-target="#fight-panel"
+      hx-swap="outerHTML"
+      hx-indicator="#loading"
+      title="Энергия 20"
+      {% if arena.is_finished or arena.turn != 'player' or p.energy < 20 or p.skill_used %}disabled{% endif %}>
       Скилл: Overcharge
     </button>
 
-    <button class="btn"
-      hx-post="{{ url_for('web.fight_use_skill', slug='emp') }}"
+    <button
+      hx-post="/fight/use-skill/emp"
       hx-target="#fight-panel"
       hx-swap="outerHTML"
-      {% if (not is_player_turn) or finished %}disabled title="Недоступно сейчас"{% endif %}>
+      hx-indicator="#loading"
+      title="Энергия 25"
+      {% if arena.is_finished or arena.turn != 'player' or p.energy < 25 or p.skill_used %}disabled{% endif %}>
       Скилл: EMP
     </button>
 
-    <button class="btn"
-      hx-post="{{ url_for('web.fight_pass') }}"
+    <button
+      hx-post="/fight/end-fight"
       hx-target="#fight-panel"
       hx-swap="outerHTML"
-      {% if (not is_player_turn) or finished %}disabled title="Недоступно сейчас"{% endif %}>
-      Пропуск
+      hx-indicator="#loading">
+      Завершить бой (сброс)
     </button>
 
-    <button class="btn"
-      hx-post="{{ url_for('web.fight_end') }}"
-      hx-target="#fight-panel"
-      hx-swap="outerHTML">
-      Завершить
-    </button>
+    <span class="center muted">
+      <span class="spinner" id="loading"></span>
+      <span id="status"></span>
+    </span>
+  </div>
+
+  <div style="margin-top:16px;">
+    <div class="muted" style="margin-bottom:6px;">Последние события</div>
+    <div class="log">
+      {% for line in arena.log[-8:] %}
+        <div>— {{ line }}</div>
+      {% else %}
+        <div class="muted">Пока пусто…</div>
+      {% endfor %}
+    </div>
   </div>
 </div>

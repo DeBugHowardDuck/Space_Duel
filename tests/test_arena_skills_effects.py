@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import Any
 
 from app.arena import Arena
 from app.classes import UnitClass
@@ -8,7 +9,7 @@ from app.equipment import Shield, Weapon
 from app.unit import create_ai, create_player
 
 
-def _mk_pair():
+def _mk_pair() -> tuple[Any, Any]:
     uclass = UnitClass(name="T", hull_max=60, energy_max=50, shield_mod=1.0, attack_mod=1.0)
     weapon = Weapon(
         slug="w",

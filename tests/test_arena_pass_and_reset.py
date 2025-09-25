@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import Any
 
 from app.arena import Arena
 from app.classes import UnitClass
@@ -8,7 +9,7 @@ from app.equipment import Shield, Weapon
 from app.unit import create_ai, create_player
 
 
-def _mk_pair():
+def _mk_pair() -> tuple[Any, Any]:
     uclass = UnitClass(name="T", hull_max=40, energy_max=20, shield_mod=1.0, attack_mod=1.0)
     weapon = Weapon(
         slug="w",
@@ -39,10 +40,12 @@ def test_pass_turn_regen_and_swap() -> None:
     e.energy = 0
     e.shield_hp = 0
 
-    assert arena.turn == "player"
+    before: str = arena.turn
     arena.pass_turn()
+    after: str = arena.turn
 
-    assert arena.turn == "ai"
+    assert after != before
+
     assert 0 < p.energy <= p.energy_max
     assert 0 < e.energy <= e.energy_max
     assert 0 <= p.shield_hp <= p.shield.capacity

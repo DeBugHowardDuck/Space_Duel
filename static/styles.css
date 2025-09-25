@@ -1,0 +1,17 @@
+:root { --gap: 12px; }
+body { margin: 24px; font-family: system-ui, Arial, sans-serif; background: #0b1020; color: #e6edf3; }
+.container { max-width: 980px; margin: 0 auto; }
+.panel-page h1 { margin-bottom: var(--gap); }
+
+.battle-card { border: 1px solid #2c3750; padding: 16px; border-radius: 12px; background: #10182a; }
+.row { display: flex; gap: var(--gap); }
+.col { flex: 1; }
+.bar { background: #0f223a; padding: 6px 8px; border-radius: 8px; margin-bottom: 6px; }
+
+.actions { display: flex; gap: 8px; margin-top: 12px; }
+.actions form { display: inline; }
+.actions button { padding: 8px 12px; border-radius: 8px; border: 1px solid #2c3750; background: #1b2a44; color: #e6edf3; cursor: pointer; }
+.actions button:hover { filter: brightness(1.1); }
+
+.skeleton { padding: 24px; opacity: .8; }
+.log { margin-top: 12px; font-size: 14px; }

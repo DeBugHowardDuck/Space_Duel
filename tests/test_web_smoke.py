@@ -5,7 +5,7 @@ from flask import Flask
 from app.web import bp as web_bp
 
 try:
-    from app.health import bp as health_bp  # type: ignore
+    from app.health import bp as health_bp
 except Exception:
     health_bp = None  # type: ignore
 
