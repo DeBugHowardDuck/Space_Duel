@@ -1,16 +1,17 @@
 # Space Duel
-[![CI](https://github.com/DeBugHowardDuck/Space_Duel/actions/workflows/ci.yml/badge.svg)](https://github.com/DeBugHowardDuck/Space_Duel/actions/workflows/ci.yml)
-![Python](https://img.shields.io/badge/python-3.12%2B-3776AB?logo=python&logoColor=white)
+[![ci](https://github.com/DeBugHowardDuck/Space_Duel/actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
+[![docker](https://github.com/DeBugHowardDuck/Space_Duel/actions/workflows/docker.yml/badge.svg)](../../actions/workflows/docker.yml)
+![python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-3.x-000000?logo=flask&logoColor=white)
-![Jinja2](https://img.shields.io/badge/Jinja2-3.x-B41717?logo=jinja&logoColor=white)
-![HTMX](https://img.shields.io/badge/HTMX-1.9-blue)
+![Jinja2](https://img.shields.io/badge/Jinja2-3.x-B41717)
+![HTMX](https://img.shields.io/badge/HTMX-1.9-3366CC)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
 ![Nginx](https://img.shields.io/badge/Nginx-proxy-009639?logo=nginx&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-pytest-0A9EDC?logo=pytest&logoColor=white)
-![Typing](https://img.shields.io/badge/types-mypy-2C5BB4)
-![Lint](https://img.shields.io/badge/lint-ruff-8842E1)
-![Coverage](https://img.shields.io/badge/coverage-73%25-yellow)
-![License](https://img.shields.io/badge/license-MIT-success)
+![tests](https://img.shields.io/badge/tests-pytest-0A9EDC?logo=pytest&logoColor=white)
+![types](https://img.shields.io/badge/types-mypy-2A6DB2)
+![lint](https://img.shields.io/badge/lint-ruff-FD7E14)
+![coverage](https://img.shields.io/badge/coverage-73%25-F1C40F)
+![license](https://img.shields.io/badge/license-MIT-3FB950)
 
 Пошаговая браузерная дуэль двух космических кораблей. Интерфейс на Flask + Jinja2 + HTMX: кнопки «Удар / Скилл / Пасс / Сброс» обновляют только панель боя без перезагрузки страницы. Есть выбор кораблей/снаряжения, уровни сложности ИИ и телеметрия боя.
 
@@ -187,6 +188,8 @@ git push origin v0.1.5
 ```
 ghcr.io/debughowardduck/space-duel-app:latest
 ghcr.io/debughowardduck/space-duel-app:v0.1.5
+
+```
 
 ## License
 MIT — см. [LICENSE](./LICENSE).
