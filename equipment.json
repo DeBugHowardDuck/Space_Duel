@@ -1,0 +1,83 @@
+{
+  "weapons": [
+    {
+      "slug": "laser_mk1",
+      "name": "Laser Mk I",
+      "kind": "laser",
+      "dmg_min": 8,
+      "dmg_max": 14,
+      "energy_cost": 10,
+      "shield_ignore": 0.10,
+      "accuracy": 0.85
+    },
+      {
+      "slug": "laser_mk2",
+      "name": "Laser Mk.II",
+      "kind": "laser",
+      "dmg_min": 9,
+      "dmg_max": 12,
+      "energy_cost": 10,
+      "shield_ignore": 0.08,
+      "accuracy": 0.82
+  },
+    {
+      "slug": "railgun_mk1",
+      "name": "Railgun Mk I",
+      "kind": "railgun",
+      "dmg_min": 12,
+      "dmg_max": 20,
+      "energy_cost": 14,
+      "shield_ignore": 0.25,
+      "accuracy": 0.75
+    },
+      {
+      "slug": "railgun_mk2",
+      "name": "Railgun Mk.II",
+      "kind": "railgun",
+      "dmg_min": 12,
+      "dmg_max": 16,
+      "energy_cost": 14,
+      "shield_ignore": 0.25,
+      "accuracy": 0.70
+  }
+  ],
+  "shields": [
+    {
+      "slug": "shield_basic",
+      "name": "Basic Shield",
+      "capacity": 30,
+      "efficiency": 0.6,
+      "regen": 3
+    },
+    {
+      "slug": "shield_heavy",
+      "name": "Heavy Shield",
+      "capacity": 45,
+      "efficiency": 0.7,
+      "regen": 2
+    },
+
+  {
+    "slug": "shield_light",
+    "name": "Light Shield",
+    "capacity": 12,
+    "efficiency": 0.55,
+    "regen": 3
+  },
+  {
+    "slug": "shield_medium",
+    "name": "Medium Shield",
+    "capacity": 18,
+    "efficiency": 0.60,
+    "regen": 2
+  },
+  {
+    "slug": "shield_capacitor",
+    "name": "Capacitor Shield",
+    "capacity": 15,
+    "efficiency": 0.50,
+    "regen": 4
+  }
+
+  ]
+}

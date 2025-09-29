@@ -1,0 +1,18 @@
+<section id="stats" hx-swap-oob="true">
+  <div class="stats-grid">
+    <div class="card">
+      <h3>Пилот</h3>
+      <div>Класс: {{ player.unit_class.name }}</div>
+      <div>Корпус: {{ player.hull }}/{{ player.hull_max }}</div>
+      <div>Энергия: {{ player.energy }}/{{ player.energy_max }}</div>
+      <div>Щит: {{ player.shield.value }}/{{ player.shield.capacity }}</div>
+    </div>
+    <div class="card">
+      <h3>Противник</h3>
+      <div>Класс: {{ enemy.unit_class.name }}</div>
+      <div>Корпус: {{ enemy.hull }}/{{ enemy.hull_max }}</div>
+      <div>Энергия: {{ enemy.energy }}/{{ enemy.energy_max }}</div>
+      <div>Щит: {{ enemy.shield.value }}/{{ enemy.shield.capacity }}</div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,20 @@
+<div id="stats-box" class="sd-card">
+  <div class="sd-card__title">Статистика</div>
+  <div class="sd-card__body">
+    <ul class="sd-list">
+      <li>Боев: <b>{{ stats.fights }}</b></li>
+      <li>Побед: <b>{{ stats.wins }}</b></li>
+      <li>Поражений: <b>{{ stats.losses }}</b></li>
+      <li>Ничьих: <b>{{ stats.draws }}</b></li>
+      <li>Winrate: <b>{{ stats.winrate }}%</b></li>
+    </ul>
+    <form
+      hx-post="{{ url_for('web.reset_stats') }}"
+      hx-target="#stats-box"
+      hx-swap="outerHTML"
+      style="margin-top: 8px"
+    >
+      <button type="submit">Сбросить</button>
+    </form>
+  </div>
+</div>

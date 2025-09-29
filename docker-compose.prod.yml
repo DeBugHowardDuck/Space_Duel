@@ -1,0 +1,24 @@
+services:
+  web:
+    image: ghcr.io/debughowardduck/space-duel:latest
+    env_file: .env
+    environment:
+      SECRET_KEY: ${SECRET_KEY:-dev-secret}
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/healthz').getcode()==200 else 1)\""]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  nginx:
+    image: nginx:1.25-alpine
+    depends_on:
+      web:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./static:/var/www/static:ro

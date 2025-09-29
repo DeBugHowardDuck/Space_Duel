@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Space Duel{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <script>
+      document.addEventListener('htmx:configRequest', function (evt) {
+        var meta = document.querySelector('meta[name="csrf-token"]');
+        if (meta && meta.content) { evt.detail.headers['X-CSRF-Token'] = meta.content; }
+      });
+    </script>
+  </head>
+  <body>
+    <header class="container site-header">
+      <div class="nav">
+        <a href="{{ url_for('web.index') }}" class="nav__brand">🚀 Space Duel</a>
+        <nav class="nav__links">
+          <a href="{{ url_for('web.index') }}"
+             class="nav__link {{ 'is-active' if request.endpoint=='web.index' else '' }}">Главная</a>
+          <a href="{{ url_for('web.choose_hero_form') }}"
+             class="nav__link {{ 'is-active' if request.endpoint=='web.choose_hero_form' else '' }}">Выбор героя</a>
+          <a href="{{ url_for('web.choose_enemy_form') }}"
+             class="nav__link {{ 'is-active' if request.endpoint=='web.choose_enemy_form' else '' }}">Выбор врага</a>
+          <a href="{{ url_for('web.fight') }}"
+             class="nav__link {{ 'is-active' if request.endpoint=='web.fight' else '' }}">Бой</a>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

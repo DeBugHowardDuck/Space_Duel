@@ -1,0 +1,197 @@
+<div id="fight-panel"
+     class="card"
+     hx-headers='{"X-CSRF-Token":"{{ csrf_token }}"}' xmlns:hx-on="http://www.w3.org/1999/xhtml">
+
+  {% set p = arena.player %}
+  {% set e = arena.ai %}
+    {% set cd_over = arena.cooldowns['player']['overcharge']|int %}
+  {% set cd_emp  = arena.cooldowns['player']['emp']|int %}
+
+
+
+<div class="panel-head">
+  <h2 class="title">Space Duel</h2>
+  <span class="chip {{ 'chip-you' if arena.turn == 'player' else 'chip-ai' }}">
+    {{ 'Ваш ход' if arena.turn == 'player' else 'Ход ИИ' }}
+  </span>
+</div>
+    {% if arena.is_finished %}
+  {% set outcome = 'draw' %}
+  {% if arena.player.is_alive and not arena.ai.is_alive %}{% set outcome = 'win' %}
+  {% elif arena.ai.is_alive and not arena.player.is_alive %}{% set outcome = 'lose' %}
+  {% endif %}
+  <div class="banner banner-{{ outcome }}">
+    {{ 'Победа 🎉' if outcome == 'win' else ('Поражение ☠️' if outcome == 'lose' else 'Ничья') }}
+  </div>
+{% endif %}
+  <div class="row">
+    <div>
+      <h2 class="title">Игрок: {{ p.name }}</h2>
+      <div class="muted">Класс: {{ p.unit_class.name }}</div>
+      <div class="muted">Оружие: {{ p.weapon.name }}</div>
+      <div class="muted">Щит: {{ p.shield.name }}</div>
+
+      <div class="muted" style="margin-top:8px;">Корпус: {{ p.hull }}/{{ p.hull_max }}</div>
+      <div class="meter">
+        <i style="width: {{ (100 * p.hull / p.hull_max)|round(0, 'floor') }}%"></i>
+      </div>
+
+      <div class="muted" style="margin-top:8px;">
+        Щит: {{ p.shield_hp }}/{{ p.shield.capacity }}
+      </div>
+      <div class="meter m2">
+        {% set cap = p.shield.capacity %}
+        {% set s_pct = 100 * (p.shield_hp if cap>0 else 0) / (cap if cap>0 else 1) %}
+        <i style="width: {{ s_pct|round(0, 'floor') }}%"></i>
+      </div>
+
+      <div class="muted" style="margin-top:8px;">
+        Энергия: {{ p.energy }}/{{ p.energy_max }}
+      </div>
+      <div class="meter">
+        <i style="width: {{ (100 * p.energy / p.energy_max)|round(0, 'floor') }}%"></i>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="title">Враг: {{ e.name }}</h2>
+      <div class="muted">Класс: {{ e.unit_class.name }}</div>
+      <div class="muted">Оружие: {{ e.weapon.name }}</div>
+      <div class="muted">Щит: {{ e.shield.name }}</div>
+
+      <div class="muted" style="margin-top:8px;">Корпус: {{ e.hull }}/{{ e.hull_max }}</div>
+      <div class="meter">
+        <i style="width: {{ (100 * e.hull / e.hull_max)|round(0, 'floor') }}%"></i>
+      </div>
+
+      <div class="muted" style="margin-top:8px;">
+        Щит: {{ e.shield_hp }}/{{ e.shield.capacity }}
+      </div>
+      <div class="meter m2">
+        {% set cap2 = e.shield.capacity %}
+        {% set s2_pct = 100 * (e.shield_hp if cap2>0 else 0) / (cap2 if cap2>0 else 1) %}
+        <i style="width: {{ s2_pct|round(0, 'floor') }}%"></i>
+      </div>
+
+      <div class="muted" style="margin-top:8px;">
+        Энергия: {{ e.energy }}/{{ e.energy_max }}
+      </div>
+      <div class="meter">
+        <i style="width: {{ (100 * e.energy / e.energy_max)|round(0, 'floor') }}%"></i>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px;">
+    {% if arena.is_finished %}
+      {% if p.is_alive and not e.is_alive %}
+        <div class="win">Победа! 🎉</div>
+      {% elif e.is_alive and not p.is_alive %}
+        <div class="lose">Поражение… ☠️</div>
+      {% else %}
+        <div class="muted">Бой завершён.</div>
+      {% endif %}
+    {% else %}
+      <div class="muted">Ход: <span class="turn">{{ arena.turn }}</span></div>
+    {% endif %}
+  </div>
+
+  <div class="stack" style="margin-top:12px;">
+            {# УДАР #}
+        {% set can_hit = (not arena.is_finished and arena.turn == 'player' and arena.player.can_fire()) %}
+        <button class="btn"
+          hx-post="/fight/hit"
+          hx-target="#fight-panel"
+          hx-swap="outerHTML"
+          hx-indicator="#loading"
+          hx-on::before-request="this.disabled=true"
+          hx-on::after-request="this.disabled=false"
+          {% if not can_hit %}
+            disabled
+            title="{{ 'бой завершён' if arena.is_finished else ('не ваш ход' if arena.turn != 'player' else 'мало энергии') }}"
+          {% else %}
+            title="Выстрелить"
+          {% endif %}
+        >
+          Удар
+        </button>
+
+        {# ПАСС #}
+        {% set can_pass = (not arena.is_finished and arena.turn == 'player') %}
+        <button class="btn"
+          hx-post="/fight/pass-turn"
+          hx-target="#fight-panel"
+          hx-swap="outerHTML"
+          hx-indicator="#loading"
+          hx-on::before-request="this.disabled=true"
+          hx-on::after-request="this.disabled=false"
+          {% if not can_pass %}disabled title="{{ 'бой завершён' if arena.is_finished else 'не ваш ход' }}"{% else %}title="Восстановить энергию/щит"{% endif %}
+        >
+          Пасс
+        </button>
+
+        {# Overcharge (20 энергии) #}
+        {% set can_over = (not arena.is_finished and arena.turn == 'player' and p.energy >= 20 and cd_over <= 0) %}
+        <button class="btn"
+          hx-post="/fight/use-skill/overcharge"
+          hx-target="#fight-panel"
+          hx-swap="outerHTML"
+          hx-indicator="#loading"
+          hx-on::before-request="this.disabled=true"
+          hx-on::after-request="this.disabled=false"
+          {% if not can_over %}disabled{% endif %}
+          title="{% if arena.is_finished %}бой завершён{% elif arena.turn!='player' %}Не ваш ход{% elif p.energy<20 %}Мало энергии{% elif cd_over>0 %}КД: {{ cd_over }} хода{% else %}Скилл: Overcharge{% endif %}"
+        >
+          Скилл: Overcharge
+        </button>
+
+        {# EMP (25 энергии) #}
+        {% set can_emp = (not arena.is_finished and arena.turn == 'player' and p.energy >= 25 and cd_emp <= 0) %}
+        <button class="btn"
+          hx-post="/fight/use-skill/emp"
+          hx-target="#fight-panel"
+          hx-swap="outerHTML"
+          hx-indicator="#loading"
+          hx-on::before-request="this.disabled=true"
+          hx-on::after-request="this.disabled=false"
+          {% if not can_emp %}disabled{% endif %}
+          title="{% if arena.is_finished %}бой завершён{% elif arena.turn!='player' %}Не ваш ход{% elif p.energy<25 %}Мало энергии{% elif cd_emp>0 %}КД: {{ cd_emp }} хода{% else %}Скилл: EMP{% endif %}"
+        >
+          Скилл: EMP
+        </button>
+
+        {# СБРОС #}
+        <button class="btn"
+          hx-post="/fight/end-fight"
+          hx-target="#fight-panel"
+          hx-swap="outerHTML"
+          hx-indicator="#loading"
+          hx-on::before-request="this.disabled=true"
+          hx-on::after-request="this.disabled=false"
+          title="Начать новую битву"
+        >
+          Завершить бой (сброс)
+        </button>
+
+    <span class="center muted">
+      <span class="spinner" id="loading"></span>
+      <span id="status"></span>
+    </span>
+  </div>
+
+      <div style="margin-top:16px;">
+        {% include "_stats_box.html" %}
+      </div>
+
+  <div style="margin-top:16px;">
+    <div class="muted" style="margin-bottom:6px;">Последние события</div>
+        <div class="log">
+          {% set vis = arena.ui_log %}
+          {% for line in vis[-8:] %}
+            <div>— {{ line }}</div>
+          {% else %}
+            <div class="muted">Пока пусто…</div>
+          {% endfor %}
+        </div>
+  </div>
+</div>

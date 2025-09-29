@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Выбор противника — Space Duel{% endblock %}
+{% block content %}
+
+<div class="card">
+  <h2 class="title">Выбор противника</h2>
+
+  <form method="post" action="{{ url_for('web.choose_enemy_submit') }}">
+        <div class="field" style="margin-top:8px;">
+      <label class="label" for="enemy-name">Имя</label>
+      <input
+        id="enemy-name"
+        class="input"
+        type="text"
+        name="name"
+        value="{{ selected_name or 'Enemy' }}"
+        placeholder="Имя врага"
+        maxlength="24"
+        autocomplete="nickname"
+      >
+    </div>
+
+
+    <div class="form-section">
+      <div class="title">Класс корабля</div>
+      <div class="options-grid">
+        {# ... твой цикл .option без изменений ... #}
+        {% for slug, cls in classes.items() %}
+          <div class="option">
+            <input type="radio" id="cls-{{ slug }}" name="unit_class" value="{{ slug }}" {% if selected_class == slug %}checked{% endif %}>
+            <label for="cls-{{ slug }}">
+              <div class="title">{{ cls.name }}</div>
+              <div class="muted">Корпус: {{ cls.hull_max }} · Энергия: {{ cls.energy_max }}</div>
+              <div class="muted">Модиф.: урон ×{{ "%.1f"|format(cls.attack_mod) }}, щит ×{{ "%.1f"|format(cls.shield_mod) }}</div>
+            </label>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="title">Оружие</div>
+      <div class="options-grid">
+        {# ... твой цикл .option по weapons без изменений ... #}
+        {% for slug, w in weapons.items() %}
+          <div class="option">
+            <input type="radio" id="w-{{ slug }}" name="weapon" value="{{ slug }}" {% if selected_weapon == slug %}checked{% endif %}>
+            <label for="w-{{ slug }}">
+              <div class="title">{{ w.name }}</div>
+              <div class="muted">{{ w.kind|capitalize }} · Энергия: {{ w.energy_cost }}</div>
+              <div class="muted">Урон: {{ w.dmg_min }}–{{ w.dmg_max }} · Точн.: {{ (w.accuracy * 100)|round(0) }}%</div>
+              <div class="muted">Игнор щита: {{ (w.shield_ignore * 100)|round(0) }}%</div>
+            </label>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="title">Щит</div>
+      <div class="options-grid">
+        {# ... твой цикл .option по shields без изменений ... #}
+        {% for slug, s in shields.items() %}
+          <div class="option">
+            <input type="radio" id="s-{{ slug }}" name="shield" value="{{ slug }}" {% if selected_shield == slug %}checked{% endif %}>
+            <label for="s-{{ slug }}">
+              <div class="title">{{ s.name }}</div>
+              <div class="muted">Ёмкость: {{ s.capacity }} · Эфф.: {{ (s.efficiency * 100)|round(0) }}%</div>
+              <div class="muted">Реген: {{ s.regen }}/ход</div>
+            </label>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="title">Сложность ИИ</div>
+
+      <div class="segmented" role="radiogroup" aria-label="Сложность ИИ">
+        <input type="radio" id="dif-easy"   name="difficulty" value="easy"
+               {% if selected_difficulty=='easy' or not selected_difficulty %}checked{% endif %}>
+        <label for="dif-easy">Лёгкая</label>
+
+        <input type="radio" id="dif-normal" name="difficulty" value="normal"
+               {% if selected_difficulty=='normal' %}checked{% endif %}>
+        <label for="dif-normal">Нормальная</label>
+
+        <input type="radio" id="dif-hard"   name="difficulty" value="hard"
+               {% if selected_difficulty=='hard' %}checked{% endif %}>
+        <label for="dif-hard">Сложная</label>
+      </div>
+
+      <div class="muted" style="margin-top:6px;">
+        Лёгкая — ИИ чаще пассует и тратит скиллы неагрессивно; Сложная — держит энергию, бьёт в окно, активнее юзает EMP/Overcharge.
+      </div>
+    </div>
+
+
+    <div class="form-actions">
+      <a class="button ghost" href="{{ url_for('web.choose_hero_form') }}" title="Назад к выбору вашего корабля">← Назад</a>
+      <button type="submit" class="button" title="Сохранить выбор и начать бой">Начать бой 🚀</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

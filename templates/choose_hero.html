@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Выбор вашего корабля — Space Duel{% endblock %}
+{% block content %}
+
+<div class="card">
+  <h2 class="title">Выбор вашего корабля</h2>
+
+  <form method="post" action="{{ url_for('web.choose_hero_submit') }}">
+    <div class="field" style="margin-top:8px;">
+  <label class="label" for="hero-name">Имя</label>
+  <input
+    id="hero-name"
+    class="input"
+    type="text"
+    name="name"
+    value="{{ selected_name or 'Player' }}"
+    placeholder="Имя пилота"
+    maxlength="24"
+    autocomplete="nickname"
+    autofocus
+  >
+</div>
+
+
+ <div class="form-section">
+  <div class="title">Класс корабля</div>
+  <div class="options-grid">
+    {% for slug, cls in classes.items() %}
+      <div class="option">
+        <input
+          type="radio"
+          id="p-cls-{{ slug }}"
+          name="unit_class"
+          value="{{ slug }}"
+          {% if selected_class==slug or (not selected_class and loop.first) %}checked{% endif %}
+        >
+        <label for="p-cls-{{ slug }}">
+          <div class="title">{{ cls.name }}</div>
+          <div class="muted">Корпус: {{ cls.hull_max }} · Энергия: {{ cls.energy_max }}</div>
+          <div class="muted">Модиф.: урон ×{{ '%.1f'|format(cls.attack_mod) }}, щит ×{{ '%.1f'|format(cls.shield_mod) }}</div>
+        </label>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+    <div class="form-section">
+  <div class="title">Оружие</div>
+  <div class="options-grid">
+    {% for slug, w in weapons.items() %}
+      <div class="option">
+        <input
+          type="radio"
+          id="p-w-{{ slug }}"
+          name="weapon"
+          value="{{ slug }}"
+          {% if selected_weapon==slug or (not selected_weapon and loop.first) %}checked{% endif %}
+        >
+        <label for="p-w-{{ slug }}">
+          <div class="title">{{ w.name }}</div>
+          <div class="muted">{{ w.kind|capitalize }} · Энергия: {{ w.energy_cost }}</div>
+          <div class="muted">Урон: {{ w.dmg_min }}–{{ w.dmg_max }} · Точн.: {{ (w.accuracy * 100)|round(0) }}%</div>
+          <div class="muted">Игнор щита: {{ (w.shield_ignore * 100)|round(0) }}%</div>
+        </label>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+    <div class="form-section">
+  <div class="title">Щит</div>
+  <div class="options-grid">
+    {% for slug, s in shields.items() %}
+      <div class="option">
+        <input
+          type="radio"
+          id="p-s-{{ slug }}"
+          name="shield"
+          value="{{ slug }}"
+          {% if selected_shield==slug or (not selected_shield and loop.first) %}checked{% endif %}
+        >
+        <label for="p-s-{{ slug }}">
+          <div class="title">{{ s.name }}</div>
+          <div class="muted">Ёмкость: {{ s.capacity }} · Эфф.: {{ (s.efficiency * 100)|round(0) }}%</div>
+          <div class="muted">Реген: {{ s.regen }}/ход</div>
+        </label>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+    <div class="form-actions">
+      <a class="button ghost" href="{{ url_for('web.fight') }}" title="Вернуться, не меняя выбор">Отмена</a>
+      <a href="{{ url_for('web.quick_fight') }}" class="button" title="Быстрый бой">Быстрый бой</a>
+      <button type="submit" class="button" title="Сохранить выбор и перейти к выбору противника">Далее →</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

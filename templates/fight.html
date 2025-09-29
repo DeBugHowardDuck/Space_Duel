@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <title>Space Duel — Бой</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background:#0b1020; color:#e6eaff; }
+      .wrap { max-width: 980px; margin: 0 auto; padding: 24px; }
+      .card { background:#0f1832; border:1px solid #233057; border-radius:12px; padding:16px; }
+      .row { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+      .muted { color:#9fb3ff; font-size:14px; }
+      .title { margin:0 0 12px; font-size:20px; }
+      .meter { height: 10px; background:#1a2447; border-radius: 100px; overflow:hidden; }
+      .meter > i { display:block; height:100%; background:#6aa6ff; }
+      .meter.m2 > i { background:#9c6aff; }
+      .stack { display:flex; gap:8px; flex-wrap:wrap; }
+      button { background:#1c2a56; color:#e6eaff; border:1px solid #334578; padding:8px 12px; border-radius:10px; cursor:pointer; }
+      button[disabled] { opacity:.5; cursor:not-allowed; }
+      .log { background:#0e1530; border:1px solid #22315a; border-radius:10px; padding:12px; max-height:200px; overflow:auto; }
+      .turn { font-weight:600; }
+      .win { color:#5bff9b; font-weight:700; }
+      .lose { color:#ff6b6b; font-weight:700; }
+      .center { display:flex; align-items:center; justify-content:center; gap:8px; }
+      .spinner { display:none; width:16px; height:16px; border-radius:50%; border:2px solid #3f5391; border-top-color:#e6eaff; animation:spin .8s linear infinite; }
+      .htmx-request .spinner { display:inline-block; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      a { color:#8fb8ff; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1 style="margin:0 0 16px;">Space Duel — Бой</h1>
+
+      <!-- Панель боя подгружается и далее всегда перерисовывается частично -->
+      <div id="fight-panel"
+           hx-get="/fight"
+           hx-trigger="load"
+           hx-target="#fight-panel"
+           hx-swap="innerHTML">
+        <div class="card center muted">
+          <div class="spinner" id="loading"></div>
+          загружаем бой…
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top:16px;">
+        Подсказка: кнопки «Удар», «Пасс» и скиллы отправляются через HTMX (без перезагрузки).
+      </p>
+    </div>
+  </body>
+</html>

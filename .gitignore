@@ -1,0 +1,29 @@
+# Кеши и байткод Python
+__pycache__/
+*.py[cod]
+
+# Виртуальное окружения и переменные окружения
+.venv
+venv/
+.env
+.env.*
+
+# Кеши инструментов и отчеты покрытия
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Сборочные артифакты
+dist/
+build/
+*.egg-info/
+
+# IDE/редакторы
+.idea/
+.vscode/
+
+# ОС-специфика
+.DS_Store
+.hypothesis/

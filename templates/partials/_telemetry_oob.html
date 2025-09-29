@@ -1,0 +1,7 @@
+<div id="telemetry" hx-swap-oob="true">
+  {% for entry in telemetry %}
+    <div class="log-entry">{{ entry|safe }}</div>
+  {% else %}
+    <div class="log-entry log-entry--empty">Пока тихо. Никто никого не взорвал.</div>
+  {% endfor %}
+</div>

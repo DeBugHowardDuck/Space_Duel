@@ -1,0 +1,65 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "space-duel"
+version = "0.1.0"
+description = "Пошаговая браузерная дуэль космических кораблей (Flask + HTMX)."
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{ name = "Space Duel Team" }]
+license = { text = "MIT" }
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ANN"]
+ignore = ["ANN101", "ANN102", "E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+combine-as-imports = true
+
+[tool.mypy]
+python_version = "3.13"
+ignore_missing_imports = true
+strict = false
+pretty = true
+show_error_codes = true
+warn_unused_configs = true
+namespace_packages = true
+files = ["app", "wsgi.py"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-q --color=yes --strict-markers --strict-config --cov=app --cov-report=term-missing:skip-covered --cov-report=html --cov-fail-under=70"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+xfail_strict = true
+
+[tool.coverage.run]
+branch = true
+source = ["app"]
+omit = ["app/__init__.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+fail_under = 70
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "hypothesis.*"
+ignore_missing_imports = true
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*" = ["ANN201", "ANN202", "ANN101", "ANN102", "S101"]
